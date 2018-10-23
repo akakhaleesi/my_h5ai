@@ -1,34 +1,27 @@
-<?php
 
-class Index {
+<!doctype html>
 
-  public $current_path;
-  public $undo_path;
-  public $redo_path;
-  public $datas;
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
 
-  public function getDirContents($path){
-    $this->current_path = $path;
-    $contents = scandir($path);
+<pre>
+  <?php
+  define('BASE_URI', str_replace('\\', '/', substr(__DIR__,strlen($_SERVER['DOCUMENT_ROOT']))));
+  $url = substr($_SERVER['REQUEST_URI'], strlen(BASE_URI));
 
-    foreach($contents as $content){
-      $path_content = realpath($path.DIRECTORY_SEPARATOR.$content);
+  require_once(implode(DIRECTORY_SEPARATOR, ['Core', 'autoload.php']));
 
-      if($content != "." && $content != ".."){
-        $content = end(explode('/',$path_content));
-        $this->datas[$path_content] = $content;
-      }
-    }
-    if($path != $_SERVER['DOCUMENT_ROOT']){
-      $path = explode('/', $path);
-      $last = count($path);
-      unset($path[$last-1]);
-      $path = implode(DIRECTORY_SEPARATOR, $path);
-      $this->undo_path = $path;
-    }
-    return print_r($this->datas);
-  }
-}
+  $core = new Core\Core();
+  $core->run();
+  ?>
+</pre>
 
-$index = new Index();
-$index->getDirContents($_SERVER['DOCUMENT_ROOT']);
+<link type="text/css" rel="stylesheet" href= <?= BASE_URI.'/public/style.css' ?> >
+<script type="text/javascript" src= <?= BASE_URI.'/public/jquery.js' ?> ></script>
+<script type="text/javascript" src= <?= BASE_URI.'/public/script.js' ?> ></script>
+
+</body>
+</html>
