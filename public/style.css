@@ -1,6 +1,86 @@
-.links {
+body {
+  background-image: url('halloween2.jpg');
+  background-size: cover;
+}
+.top {
+  padding: 15px;
+  background:#7f7f7f;
+  background:rgba(0,0,0,0.5);
+}
+.corp {
+  margin-left: 20px !important;
+  padding: 5px !important;
+  width: 52%;
+}
+.bold {
+  font-weight: bold;
+}
+.tools>p {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #dd6130;
+  font-family: 'Mali', cursive;
+}
+input {
+  margin-left: 10px;
+  font-family: 'Mali', cursive;
+  font-size: 17px;
+  border:0 none;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+input:hover {
+  cursor: pointer;
+  background-color: #dd6130;
+}
+.tools {
   display: flex;
-  background-color: #55c5c5;
+}
+.pwd, .pwd>a {
+  margin: 20px 0;
+  font-size: 25px;
+  font-weight: bold;
+}
+.pwd>a:hover {
+  color: #d14b17;
+}
+.links {
+  margin: 10px !important;
+  padding: 5px !important;
+  border-radius: 3px;
+  display: flex;
+  background-color: #e3e5e8;
+}
+.links:hover {
+  cursor: pointer;
+  background-color: #dd6130;
+}
+p, a {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 18px;
+  margin-top: 5px;
+}
+.left-link {
+  display: flex;
+  width: 100%;
+  float: left !important;
+}
+.right-link {
+  margin-right: 5px;
+  width: 100%;
+  float: right !important;
+  text-align: right;
+}
+.file-info {
+  float: right;
+  text-align: right !important;
 }
 .folder-img {
+  margin-right: 10px;
+}
+#file {
+  padding: 5px !important;
+  border-radius: 3px;
+  width: 100%;
+  background-color: #e3e5e8;
 }

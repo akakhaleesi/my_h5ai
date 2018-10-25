@@ -36,7 +36,7 @@ class Controller {
       else {
         if(is_file($tmp_path)){
           // URL image
-          if(preg_match('/([\w\-])+(.png|.pnj|.jpg|.jpeg|.svg|.gif)$/', $value)){
+          if(preg_match('/([\w\-])+(.png|.pnj|.jpg|.jpeg|.svg|.gif|.ico)$/', $value)){
             $this->type_path = 'image';
             $this->setCurrentPath($tmp_path);
           }
@@ -53,7 +53,7 @@ class Controller {
         }
       }
     }
-    if($error == true) echo "no repository: $message \n";
+    if($error == true) echo "<p>Rien ne correspond a ".$message.".</p>";
 
     $this->scan_dir();
   }
@@ -88,7 +88,7 @@ class Controller {
     }
     // File
     elseif($this->type_path == 'file'){
-      echo '<div class="links"><a href="'.$undo.'">Retour</a></div><br>';
+      echo '<a href="'.$undo.'"><div class="links"><p>Retour</p></div></a>';
       $data = file_get_contents($this->current_path);
       $file = $_SERVER['DOCUMENT_ROOT'].BASE_URI.'/file.txt';
 
@@ -96,12 +96,12 @@ class Controller {
       fclose($old_file);
       $new_file = fopen($file, 'r+');
       fwrite($new_file, $data);
-      echo file_get_contents($file);
+      echo '<div id="file">'.file_get_contents($file).'</div>';
       fclose($new_file);
     }
     // Image
     elseif($this->type_path == 'image'){
-      echo '<div class="links"><a href="'.$undo.'">Retour</a></div><br>';
+      echo '<a href="'.$undo.'"><div class="links"><p>Retour</p></div></a>';
       $src = str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->current_path);
       echo '<img src="' . $src . '">';
     }
@@ -121,7 +121,7 @@ class Controller {
       $path .= $links[$i].DIRECTORY_SEPARATOR;
       $links[$i] = '<a href="'.BASE_URI.$path.'">'.$folder.'</a>';
     }
-    $pwd_path = '<p>'.implode(DIRECTORY_SEPARATOR, $links).'</p><br>';
+    $pwd_path = '<p class="pwd">'.implode(DIRECTORY_SEPARATOR, $links).'</p>';
     echo $pwd_path;
 
     // Render Tree
@@ -141,7 +141,9 @@ class Controller {
       }
       // Folder
       else{
-        echo '<div class="links"><img class="folder-img" src="'.BASE_URI.'/public/folder.png" width="30" height="30"/><a href="'.BASE_URI.$path.'">'.$data.'</a></div><br>';
+        echo '<a href="'.BASE_URI.$path.'"><div class="links">
+        <img class="folder-img" src="'.BASE_URI.'/public/folder.png" width="30" height="30"/><p>'.$data.'</p>
+        </div></a>';
       }
     }
     $files_array = array_filter($files);
@@ -163,7 +165,10 @@ class Controller {
     foreach($files as $data){
       $file_size = $this->human_filesize($data['size']);
       $last_mod = date("m.d.Y, H:m a", $data['last-mod']);
-      echo '<div class="links"><img class="folder-img" src="'.BASE_URI.'/public/file.png" width="25" height="25"/><a href="'.$data['path'].'">'.$data['name'].'</a><p>'.$file_size.' | last mod: '.$last_mod.'</p></div><br>';
+      echo '<a href="'.$data['path'].'"><div class="links">
+      <div class="left-link"><img class="folder-img" src="'.BASE_URI.'/public/file.png" width="25" height="25"/><p>'.$data['name'].'</p></div>
+      <div class="right-link"><p>'.$file_size.' - last mod: '.$last_mod.'</p></div>
+      </div></a>';
     }
   }
 
