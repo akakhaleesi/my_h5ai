@@ -7,17 +7,16 @@
 </head>
 <body>
 
-<pre>
+<div class="container">
   <?php
   define('BASE_URI', str_replace('\\', '/', substr(__DIR__,strlen($_SERVER['DOCUMENT_ROOT']))));
+  require_once(implode(DIRECTORY_SEPARATOR, ['Core', 'autoload.php']));
   $url = substr($_SERVER['REQUEST_URI'], strlen(BASE_URI));
 
-  require_once(implode(DIRECTORY_SEPARATOR, ['Core', 'autoload.php']));
-
-  $core = new Core\Core();
-  $core->run();
+  $controller = new Controller\Controller();
+  $controller->init($url);
   ?>
-</pre>
+</div>
 
 <link type="text/css" rel="stylesheet" href= <?= BASE_URI.'/public/style.css' ?> >
 <script type="text/javascript" src= <?= BASE_URI.'/public/jquery.js' ?> ></script>

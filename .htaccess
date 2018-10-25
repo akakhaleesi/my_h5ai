@@ -1,5 +1,5 @@
 RewriteEngine On
 RewriteBase /campus/my_h5ai/
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
-RewriteCond %{REQUEST_URI} !^/campus/my_h5ai/(public/.+|index\.php)$
+RewriteCond %{REQUEST_URI} !^/campus/my_h5ai/(public/.+|index\.php|file\.txt)$
 RewriteRule ^ index.php [QSA,L]
