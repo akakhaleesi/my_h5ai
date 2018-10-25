@@ -1,6 +1,7 @@
 body {
   background-image: url('halloween2.jpg');
   background-size: cover;
+  background-position: fixed;
 }
 .top {
   padding: 15px;
