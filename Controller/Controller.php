@@ -60,6 +60,11 @@ class Controller {
 
   // ------------ Scan dir/file
   public function scan_dir(){
+    $tmp_path = str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->current_path);
+    $undo = explode('/', $tmp_path);
+    array_pop($undo);
+    $undo = BASE_URI.implode(DIRECTORY_SEPARATOR, $undo);
+
     // Folder
     if($this->type_path == 'folder'){
       $contents = scandir($this->current_path);
@@ -68,13 +73,13 @@ class Controller {
       foreach($contents as $content){
         if($this->current_path == $_SERVER['DOCUMENT_ROOT']){
           if($content != '.' && $content != '..'){
-            $path = str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->current_path).DIRECTORY_SEPARATOR.$content;
+            $path = $tmp_path.DIRECTORY_SEPARATOR.$content;
             $datas[$path] = $content;
           }
         }
         else {
           if($content != '.' ){
-            $path = str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->current_path).DIRECTORY_SEPARATOR.$content;
+            $path = $tmp_path.DIRECTORY_SEPARATOR.$content;
             $datas[$path] = $content;
           }
         }
@@ -83,6 +88,7 @@ class Controller {
     }
     // File
     elseif($this->type_path == 'file'){
+      echo '<div class="links"><a href="'.$undo.'">Retour</a></div><br>';
       $data = file_get_contents($this->current_path);
       $file = $_SERVER['DOCUMENT_ROOT'].BASE_URI.'/file.txt';
 
@@ -95,6 +101,7 @@ class Controller {
     }
     // Image
     elseif($this->type_path == 'image'){
+      echo '<div class="links"><a href="'.$undo.'">Retour</a></div><br>';
       $src = str_replace($_SERVER['DOCUMENT_ROOT'],'',$this->current_path);
       echo '<img src="' . $src . '">';
     }
@@ -131,21 +138,10 @@ class Controller {
         //if(isset($favicon)) echo $favicon;
         $params = ['name' => $data, 'path' => BASE_URI.$path, 'size' => $file_size, 'last-mod' => $last_mod];
         array_push($files, $params);
-        // if(isset($_POST['order'])){
-        //   if($_POST['order'] == 'by_last-mod'){
-        //     $files[$last_mod] = $params;
-        //   }
-        //   elseif($_POST['order'] == 'by_size'){
-        //     $files[$file_size] = $params;
-        //   }
-        // }
-        // else{
-        //   $files[$data] = $params;
-        // }
       }
       // Folder
       else{
-        echo '<div class="links"><a href="'.BASE_URI.$path.'">'.$data.'</a></div><br>';
+        echo '<div class="links"><img class="folder-img" src="'.BASE_URI.'/public/folder.png" width="30" height="30"/><a href="'.BASE_URI.$path.'">'.$data.'</a></div><br>';
       }
     }
     $files_array = array_filter($files);
@@ -158,9 +154,6 @@ class Controller {
 
   // ------------ List doc
   public function list($files){
-    //if(isset($_POST['order'])) ? $order = $_POST['order']: $order = 'name';
-    //$order = (isset($_POST['order'])) ? $_POST['order'];
-
     if(isset($_POST['order'])){
       usort($files, function($a, $b) {
         return $a[$_POST['order']] - $b[$_POST['order']];
@@ -170,7 +163,7 @@ class Controller {
     foreach($files as $data){
       $file_size = $this->human_filesize($data['size']);
       $last_mod = date("m.d.Y, H:m a", $data['last-mod']);
-      echo '<div class="links"><a href="'.$data['path'].'">'.$data['name'].'</a><p>'.$file_size.' | last mod: '.$last_mod.'</p></div><br>';
+      echo '<div class="links"><img class="folder-img" src="'.BASE_URI.'/public/file.png" width="25" height="25"/><a href="'.$data['path'].'">'.$data['name'].'</a><p>'.$file_size.' | last mod: '.$last_mod.'</p></div><br>';
     }
   }
 
