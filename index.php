@@ -8,6 +8,12 @@
 <body>
 
 <div class="container">
+  <div>
+    <p>Trier par:</p>
+    <form method="post" action=""><input type="hidden" name="order" value="size"><input type="submit" value="taille"></form>
+    <form method="post" action=""><input type="hidden" name="order" value="last-mod"><input type="submit" value="date de modification"></form>
+  </div>
+
   <?php
   define('BASE_URI', str_replace('\\', '/', substr(__DIR__,strlen($_SERVER['DOCUMENT_ROOT']))));
   require_once(implode(DIRECTORY_SEPARATOR, ['Core', 'autoload.php']));

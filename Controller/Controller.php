@@ -118,32 +118,71 @@ class Controller {
     echo $pwd_path;
 
     // Render Tree
+    $files = [];
+
     foreach($datas as $path => $data){
       $tmp_path = $_SERVER['DOCUMENT_ROOT'].$path;
 
+      // File
       if(is_file($tmp_path)){
-        $file_size = $this->human_filesize(filesize($tmp_path));
-        $last_mod = date("m.d.Y, g:i a", filemtime($tmp_path));
+        $file_size = filesize($tmp_path);
+        $last_mod = filemtime($tmp_path);
         //if(preg_match('/([\w\-])+(.html)$/', $path)) $favicon = $this->get_favivon($tmp_path);
         //if(isset($favicon)) echo $favicon;
-
-        echo '<div class="links"><a href="'.BASE_URI.$path.'">'.$data.'</a><p>'.$file_size.' | last mod: '.$last_mod.'</p></div><br>';
+        $params = ['name' => $data, 'path' => BASE_URI.$path, 'size' => $file_size, 'last-mod' => $last_mod];
+        array_push($files, $params);
+        // if(isset($_POST['order'])){
+        //   if($_POST['order'] == 'by_last-mod'){
+        //     $files[$last_mod] = $params;
+        //   }
+        //   elseif($_POST['order'] == 'by_size'){
+        //     $files[$file_size] = $params;
+        //   }
+        // }
+        // else{
+        //   $files[$data] = $params;
+        // }
       }
+      // Folder
       else{
         echo '<div class="links"><a href="'.BASE_URI.$path.'">'.$data.'</a></div><br>';
       }
     }
+    $files_array = array_filter($files);
+
+    // Display files
+    if (!empty($files_array)) {
+      $this->list($files);
+    }
+  }
+
+  // ------------ List doc
+  public function list($files){
+    //if(isset($_POST['order'])) ? $order = $_POST['order']: $order = 'name';
+    //$order = (isset($_POST['order'])) ? $_POST['order'];
+
+    if(isset($_POST['order'])){
+      usort($files, function($a, $b) {
+        return $a[$_POST['order']] - $b[$_POST['order']];
+      });
+    }
+
+    foreach($files as $data){
+      $file_size = $this->human_filesize($data['size']);
+      $last_mod = date("m.d.Y, H:m a", $data['last-mod']);
+      echo '<div class="links"><a href="'.$data['path'].'">'.$data['name'].'</a><p>'.$file_size.' | last mod: '.$last_mod.'</p></div><br>';
+    }
   }
 
   // ------------ Amazing function found on the web <3
-  function human_filesize($bytes, $decimals = 2) {
+  public function human_filesize($bytes, $decimals = 2) {
     $sz = 'BKMGTP';
     $factor = floor((strlen($bytes) - 1) / 3);
     return round($bytes / pow(1024, $factor), 2) .' '. @$sz[$factor];
   }
 
   // ------------ Get favicon
-  function get_favivon($path){
+  public function get_favivon($path){
     // $doc = new \DOMDocument();
     // $doc->strictErrorChecking = FALSE;
     // $doc->loadHTML(file_get_contents($path));
